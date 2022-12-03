@@ -83,7 +83,7 @@ const deleteByName = (habitArea) => {
                 "DELETE FROM habits WHERE habitArea=?;",
                 [habitArea],
                 (_, { rowsAffected }) => {
-                r   esolve(rowsAffected);
+                    resolve(rowsAffected);
                 },
                 (_, error) => reject(error)
             );
