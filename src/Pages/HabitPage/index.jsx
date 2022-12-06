@@ -109,6 +109,8 @@ export default function HabitPage({route}) {
             });
         }
     }
+
+    
     
     function handleUpdateHabit() {
         if (notificationToggle === true && !dayNotification && !timeNotification) {
@@ -171,6 +173,23 @@ export default function HabitPage({route}) {
                 Notifications.removeNotificationSubscription(responseListener.current);
             };
         }, []);
+
+        {create === false ? (
+            <UpdateExcludeButtons
+                handleUpdate={handleUpdateHabit}
+                habitInput={habitInput}
+                habitArea={habit?.habitArea}
+            />
+        ) : (
+            <View style={styles.configButton}>
+                <DefaultButton
+                    buttonText={"Criar"}
+                    handlePress={handleCreateHabit}
+                    width={250}
+                    height={50}
+                />
+            </View>
+        )}
 
 
 

@@ -9,7 +9,9 @@ Alert,
 } from "react-native";
 
 import { useNavigation } from "@react-navigation/native";
+
 import HabitsService from "../../../service/HabitService"
+import NotificationService from "../../../service/NotificationService";
 
 export default function UpdateExcludeButtons({
 habitInput,
@@ -22,6 +24,7 @@ function handleDeleteHabit() {
     HabitsService.deleteByName(habitArea)
         .then(() => {
         Alert.alert("Exclusão feita com sucesso");
+        NotificationService.deleteNotification(habitInput);
         navigation.navigate("Home", {
             excludeArea: `${habitArea}`,
         });
