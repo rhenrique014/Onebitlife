@@ -22,6 +22,8 @@ import DefaultButton from "../../Components/Common/DefaultButton";
 
 import HabitsService from "../../service/HabitService";
 
+import NotificationService from "../../service/NotificationService";
+
 
 Notifications.setNotificationHandler({
     handleNotification:async () => ({
@@ -79,6 +81,14 @@ export default function HabitPage({route}) {
                 "Você precisa dizer a frequência e o horário da notificação!"
             );
         } else {
+            if (notificationToggle) {
+                NotificationService.createNotification(
+                    habitInput,
+                    frequencyInput,
+                    dayNotification,
+                    timeNotification
+                );
+            }
             HabitsService.createHabit({
                 habitArea: habit?.habitArea,
                 habitName: habitInput,
