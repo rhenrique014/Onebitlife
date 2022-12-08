@@ -18,6 +18,7 @@ return (
         <Stack.Screen name="Home" component={Home} />
         <Stack.Screen name="HabitPage" component={HabitPage} />
         <Stack.Screen name="AppExplanation" component={AppExplanation} />
+        <Stack.Screen name="Start" component={Start} />
         </Stack.Navigator>
     </NavigationContainer>
 );

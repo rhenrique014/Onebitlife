@@ -11,6 +11,8 @@ import ChangeNavigationService from "../../service/ChangeNavigationService";
 import HabitsService  from "../../service/HabitService";
 import CheckService from "../../service/CheckService";
 
+import db from "../../Database";
+
 
 export default function Home({route}) {
     const navigation = useNavigation();
@@ -21,13 +23,18 @@ export default function Home({route}) {
 
     const [robotDaysLife, setRobotDaysLife] = useState();
     const [checks, setChecks] = useState();
+    const [gameOver, setGameOver] = useState(false);
+
     
     const today = new Date();
 
 
 
-    function handleNavExplanation() {
-        navigation.navigate("AppExplanation");
+    function handleGameOver() {
+        db.transaction((tx) => {
+            tx.executeSql("DROP TABLE habits;");
+            tx.executeSql("DROP TABLE change_navigation;");
+        });
     }
 
     const excludeArea = route.params?.excludeArea;
@@ -92,7 +99,18 @@ export default function Home({route}) {
 
         setChecks(mindChecks + moneyChecks + bodyChecks + funChecks);
 
+        if (
+            mindHabit?.progressBar === 0 ||
+            moneyHabit?.progressBar === 0 ||
+            bodyHabit?.progressBar === 0 ||
+            funHabit?.progressBar === 0
+        ) {
+            setGameOver(true)
+        }
+
     }, [mindHabit, moneyHabit, bodyHabit, funHabit]);
+
+
 
 
 
@@ -100,9 +118,14 @@ export default function Home({route}) {
         <View style={styles.container}>
             <ScrollView>
                 <View style={{alignItems:"center"}}>
+                {!gameOver ? (
                     <Text style={styles.dailyChecks}>
-                        ❤️ {robotDaysLife} {robotDaysLife === "01" ? "dia" : "dias"} - ✔️ {checks} {checks === 1 ? "Check" : "Checks"}
+                        ❤️ {robotDaysLife} {robotDaysLife === "01" ? "dia" : "dias"} - ✔️{" "}
+                    {checks} {checks === 1 ? "Check" : "Checks"}
                     </Text>
+                    ) : (
+                        <Text style={styles.gameOverTitle}>Game Over</Text>
+                    )}
                     
 
                     <LifeStatus 
@@ -119,41 +142,59 @@ export default function Home({route}) {
                     />
 
 
+                    {!gameOver ? (
+                                <View>
+                                {mindHabit ? (
+                                    <EditHabit habit={mindHabit} checkColor="#90B7F3" />
+                                ) : (
+                                    <CreateHabit habitArea="Mente" borderColor="#90B7F3" />
+                                )}
+                                {moneyHabit ? (
+                                    <EditHabit habit={moneyHabit} checkColor="#85BB65" />
+                                ) : (
+                                    <CreateHabit habitArea="Financeiro" borderColor="#85BB65" />
+                                )}
+                                {bodyHabit ? (
+                                    <EditHabit habit={bodyHabit} checkColor="#FF0044" />
+                                ) : (
+                                    <CreateHabit habitArea="Corpo" borderColor="#FF0044" />
+                                )}
+                                {funHabit ? (
+                                    <EditHabit habit={funHabit} checkColor="#FE7F23" />
+                                ) : (
+                                    <CreateHabit habitArea="Humor" borderColor="#FE7F23" />
+                                )}
 
-                    {mindHabit ? (
-                        <EditHabit habit={mindHabit} checkColor="#90B7F3" />
-                        ) : (
-                        <CreateHabit habitArea="Mente" borderColor="#90B7F3" />
-                        )}
-                        {moneyHabit ? (
-                        <EditHabit habit={moneyHabit} checkColor="#85BB65" />
-                        ) : (
-                        <CreateHabit habitArea="Financeiro" borderColor="#85BB65" />
-                        )}
-                        {bodyHabit ? (
-                        <EditHabit habit={bodyHabit} checkColor="#FF0044" />
-                        ) : (
-                        <CreateHabit habitArea="Corpo" borderColor="#FF0044" />
-                        )}
-                        {funHabit ? (
-                        <EditHabit habit={funHabit} checkColor="#FE7F23" />
-                        ) : (
-                        <CreateHabit habitArea="Humor" borderColor="#FE7F23" />
-                        )}
+                                <Text
+                                    style={styles.explanationText}
+                                    onPress={() => {
+                                        handleNavExplanation();
+                                    }}
+                                >
+                                    Ver explicações novamente
+                                </Text>
 
-                </View>
-                <Text
-                    style={styles.explanationText}
-                    onPress={() => {
-                        handleNavExplanation();
-                    }}
-                >
-                    Ver explicações novamente
-                </Text>
-            </ScrollView>
+
+                            </View>
+
+                            ) : (
+                            <View style={{ marginVertical: 40 }}>
+                                <DefaultButton
+                                    buttonText={"Resetar o Game"}
+                                    handlePress={handleGameOver}
+                                    width={250}
+                                    height={50}
+                                />
+                            </View>
+                        )}
+                    </View>
+                </ScrollView>
         </View>
     );
+
 }
+
+
 
 const styles = StyleSheet.create({
     container: {
@@ -174,5 +215,11 @@ const styles = StyleSheet.create({
         textAlign: "center",
         paddingTop: 15,
         paddingBottom: 25,
+    },
+    gameOverTitle: {
+        marginVertical: 25,
+        fontSize: 20,
+        fontWeight: "bold",
+            color: "white",
     },
 });
