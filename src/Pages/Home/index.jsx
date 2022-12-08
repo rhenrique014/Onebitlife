@@ -9,6 +9,7 @@ import StatusBar from "../../Components/Home/StatusBar";
 import EditHabit from "../../Components/Home/EditHabit";
 import ChangeNavigationService from "../../service/ChangeNavigationService";
 import HabitsService  from "../../service/HabitService";
+import CheckService from "../../service/CheckService";
 
 
 export default function Home({route}) {
@@ -68,6 +69,10 @@ export default function Home({route}) {
             })
         .catch((err) => console.log(err));
     }, [route.params]);
+
+    useEffect(() => {
+        CheckService.removeCheck(mindHabit, moneyHabit, bodyHabit, funHabit);
+    }, [mindHabit, moneyHabit, bodyHabit, funHabit]);
 
 
 
