@@ -85,7 +85,12 @@ export default function Home({route}) {
                     </Text>
                     
 
-                    <LifeStatus />
+                    <LifeStatus 
+                        mindHabit={mindHabit}
+                        moneyHabit={moneyHabit}
+                        bodyHabit={bodyHabit}
+                        funHabit={funHabit}
+                    />
                     <StatusBar 
                         mindHabit={mindHabit?.progressBar}
                         moneyHabit={moneyHabit?.progressBar}

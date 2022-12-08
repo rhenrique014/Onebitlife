@@ -1,35 +1,54 @@
 import {View, StyleSheet} from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 import Lottie from "lottie-react-native";
+import AnimationService from "../../../service/animationService";
 
-export default function LifeStatus() {
+export default function LifeStatus(
+    mindHabit,
+    moneyHabit,
+    bodyHabit,
+    funHabit,
+) {
     /*Status:
     100 - Máximo
     50 - Médio
     25 - baixo
     00 - Curto (Acabou o game)
-    No robô, nós temos primeiros Felicidade e depoisa Saúde xx-xx
+    No robô, nós temos primeiros Felicidade e depois a Saúde xx-xx
 */
+    const [mind, setMind] = useState();
+
+    const [money, setMoney] = useState();
+
+    const [robot, setRobot] = useState();
+
+    useEffect(() => {
+        AnimationService.animationStatus (
+            mindHabit?.progressBar,
+            moneyHabit?.progressBar,
+            bodyHabit?.progressBar,
+            funHabit?.progressBar,
+            setMind,
+            setMoney,
+            setRobot
+        );
+    }, [mindHabit, moneyHabit, bodyHabit, funHabit]);
+
+
     return (
         <View style={styles.container}>
-            <Lottie
-                source={require("../../../assets/education/education-100.json")}
-                autoPlay
-                loop
-                style={styles.educacaoAnimacao}
+            <Lottie 
+                source={mind} 
+                autoPlay loop style={styles.educacaoAnimacao} 
             />
-            <Lottie
-                source={require("../../../assets/money/money-100.json")}
-                autoPlay
-                loop
-                style={styles.financasAnimacao}
+            <Lottie 
+                source={money} 
+                autoPlay loop style={styles.financasAnimacao} 
             />
-            <Lottie
-                source={require("../../../assets/robot/robot-100-100.json")}
-                autoPlay
-                loop
-                style={styles.roboAnimacao}
+            <Lottie 
+                source={robot} 
+                autoPlay loop style={styles.roboAnimacao} 
             />
 
         </View>
